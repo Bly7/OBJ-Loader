@@ -1,4 +1,4 @@
-# RS OBJ LOADER
+# OBJ LOADER
 
 The quick to use single header OBJ loader
 
@@ -12,7 +12,11 @@ OBJ Loader was made with compatibility in mind. So you only need the header file
 
 ## Installation
 
-All you need to to is copy over the OBJ_Loader.h header file, include it in your solution, and you are good to go.
+All you need to to is copy over the OBJ_Loader.h header file, include it in your solution, and you are good to go. It is located within the source folder.
+
+## Examples
+
+Examples are found within the examples folder. In order to compile these you will need to link OBJ_Loader.h to the compiler in since it is not included within the example folders.
 
 ## Quick Use Guide
 

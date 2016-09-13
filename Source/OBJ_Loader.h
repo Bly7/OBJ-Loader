@@ -1,3 +1,5 @@
+// OBJ_Loader.h - A Single Header OBJ Model Loader
+
 #pragma once
 
 // Vector - STD Vector/Array Library
