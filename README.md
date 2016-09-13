@@ -21,31 +21,28 @@ These are all of the included classes and only the relevant members and methods.
 
 ### Mesh
 
-1. std::string MeshName
-    The Mesh Name given in the .obj
-2. std::vector<Vertex> Vertices
-    Vertex List
-3. std::vector<unsigned int> Indices
-    Index List
+1. std::string MeshName : The Mesh Name given in the .obj
+2. std::vector<Vertex> Vertices : Vertex List
+3. std::vector<unsigned int> Indices : Index List
 
 ### Vertex
 
-1. Vector3 Position :                                Position vector
-2. Vector3 Normal :                                  Normal vector
-3. Vector2 TextureCoordinate :                       Texture Coordinate vector
+1. Vector3 Position : Position vector
+2. Vector3 Normal : Normal vector
+3. Vector2 TextureCoordinate : Texture Coordinate vector
 
 ### Vector3
 
-1. float X, Y, Z :                                   XYZ Position Variables
+1. float X, Y, Z : Position Variables
 
 ### Vector2
 
-1. float X, Y :                                      XY Position Variables
+1. float X, Y : Position Variables
 
 ### Loader
 
-1. bool LoadFile(std::string Path) :                 Load a file from a path. Return true if found and loaded. Return false if not                                                  
-2. std::vector<Mesh> LoadedMeshes :                  Loaded Mesh Objects
+1. bool LoadFile(std::string Path) : Load a file from a path. Return true if found and loaded. Return false if not                                                  
+2. std::vector<Mesh> LoadedMeshes : Loaded Mesh Objects
 
 
 
