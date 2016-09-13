@@ -1,178 +1,123 @@
 #pragma once
 
+// Vector - STD Vector/Array Library
 #include <vector>
 
+// String - STD String Library
 #include <string>
 
+// fStream - STD File I/O Library
 #include <fstream>
 
+// Namespace: OBJL
+//
+// Description: The namespace that holds eveyrthing that
+//	is needed and used for the OBJ Model Loader
 namespace objl
 {
+	// Structure: Vector2
+	//
+	// Description: A 2D Vector that Holds Positional Data
 	struct Vector2
 	{
+		// Default Constructor
 		Vector2()
 		{
-
+			X = 0.0f;
+			Y = 0.0f;
 		}
+		// Variable Set Constructor
 		Vector2(float X_, float Y_)
 		{
 			X = X_;
 			Y = Y_;
 		}
+		// Bool Equals Operator Overload
 		bool operator==(const Vector2& other) const
 		{
 			return (this->X == other.X && this->Y == other.Y);
 		}
+		// Bool Not Equals Operator Overload
 		bool operator!=(const Vector2& other) const
 		{
 			return !(this->X == other.X && this->Y == other.Y);
 		}
+		// Addition Operator Overload
 		Vector2 operator+(const Vector2& right) const
 		{
 			return Vector2(this->X + right.X, this->Y + right.Y);
 		}
+		// Subtraction Operator Overload
 		Vector2 operator-(const Vector2& right) const
 		{
 			return Vector2(this->X - right.X, this->Y - right.Y);
 		}
+		// Float Multiplication Operator Overload
 		Vector2 operator*(const float& other) const
 		{
 			return Vector2(this->X *other, this->Y * other);
 		}
 
-		float X, Y = 0.0f;
+		// Positional Variables
+		float X;
+		float Y;
 	};
 
+	// Structure: Vector3
+	//
+	// Description: A 3D Vector that Holds Positional Data
 	struct Vector3
 	{
+		// Default Constructor
 		Vector3()
 		{
-
+			X = 0.0f;
+			Y = 0.0f;
+			Z = 0.0f;
 		}
+		// Variable Set Constructor
 		Vector3(float X_, float Y_, float Z_)
 		{
 			X = X_;
 			Y = Y_;
 			Z = Z_;
 		}
+		// Bool Equals Operator Overload
 		bool operator==(const Vector3& other) const
 		{
 			return (this->X == other.X && this->Y == other.Y && this->Z == other.Z);
 		}
+		// Bool Not Equals Operator Overload
 		bool operator!=(const Vector3& other) const
 		{
 			return !(this->X == other.X && this->Y == other.Y && this->Z == other.Z);
 		}
+		// Addition Operator Overload
 		Vector3 operator+(const Vector3& right) const
 		{
 			return Vector3(this->X + right.X, this->Y + right.Y, this->Z + right.Z);
 		}
+		// Subtraction Operator Overload
 		Vector3 operator-(const Vector3& right) const
 		{
 			return Vector3(this->X - right.X, this->Y - right.Y, this->Z - right.Z);
 		}
+		// Float Multiplication Operator Overload
 		Vector3 operator*(const float& other) const
 		{
 			return Vector3(this->X *other, this->Y * other, this->Z - other);
 		}
 
-		float X, Y, Z = 0.0f;
+		// Positional Variables
+		float X;
+		float Y;
+		float Z;
 	};
 
-	Vector3 operator*(const float& left, const Vector3& right)
-	{
-		return Vector3(right.X * left, right.Y * left, right.Z * left);
-	}
-
-	inline void split(const std::string &in,
-		std::vector<std::string> &out,
-		std::string token)
-	{
-		out.clear();
-
-		std::string temp;
-
-		for (int i = 0; i < int(in.size()); i++)
-		{
-			std::string test = in.substr(i, token.size());
-
-			if (test == token)
-			{
-				if (!temp.empty())
-				{
-					out.push_back(temp);
-					temp.clear();
-					i += token.size() - 1;
-				}
-				else
-				{
-					out.push_back("");
-				}
-			}
-			else if (i + token.size() >= in.size())
-			{
-				temp += in.substr(i, token.size());
-				out.push_back(temp);
-				break;
-			}
-			else
-			{
-				temp += in[i];
-			}
-		}
-	}
-
-	Vector3 CrossV3(const Vector3 a, const Vector3 b)
-	{
-		return Vector3(a.Y * b.Z - a.Z * b.Y,
-			a.Z * b.X - a.X * b.Z,
-			a.X * b.Y - a.Y * b.X);
-	}
-
-	float MagnitudeV3(const Vector3 in)
-	{
-		return (sqrtf(powf(in.X, 2) + powf(in.Y, 2) + powf(in.Z, 2)));
-	}
-
-	float DotV3(const Vector3 a, const Vector3 b)
-	{
-		return (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z);
-	}
-
-	bool inTriangle(Vector3 point, Vector3 tri1, Vector3 tri2, Vector3 tri3)
-	{
-		// Starting vars
-		Vector3 u = tri2 - tri1;
-		Vector3 v = tri3 - tri1;
-		Vector3 w = point - tri1;
-		Vector3 n = CrossV3(u, v);
-
-		float y = (DotV3(CrossV3(u, w), n) / DotV3(n, n));
-		float b = (DotV3(CrossV3(u, w), n) / DotV3(n, n));
-		float a = 1 - y - b;
-
-		// Projected point
-		Vector3  p = (a * tri1) + (b * tri2) + (y * tri3);
-
-		if (a >= 0 && a <= 1
-			&& b >= 0 && b <= 1
-			&& y >= 0 && y <= 1)
-		{
-			return true;
-		}
-		else
-			return false;
-	}
-
-
-
-	float AngleBetweenV3(const Vector3 a, const Vector3 b)
-	{
-		float angle = DotV3(a, b);
-		angle /= (MagnitudeV3(a) * MagnitudeV3(b));
-		return angle = acosf(angle);
-	}
-
+	// Structure: Vertex
+	//
+	// Description: Model Vertex object that holds
+	//	a Position, Normal, and Texture Coordinate
 	struct Vertex
 	{
 		// Position Vector
@@ -185,30 +130,162 @@ namespace objl
 		Vector2 TextureCoordinate;
 	};
 
+	// Structure: Mesh
+	//
+	// Description: A Simple Mesh Object that holds
+	//	a name, a vertex list, and an index list
 	struct Mesh
 	{
+		// Default Constructor
 		Mesh()
 		{
 
 		}
+		// Variable Set Constructor
 		Mesh(std::vector<Vertex>& _Vertices, std::vector<unsigned int>& _Indices)
 		{
 			Vertices = _Vertices;
 			Indices = _Indices;
 		}
+		// Mesh Name
 		std::string MeshName;
+		// Vertex List
 		std::vector<Vertex> Vertices;
+		// Index List
 		std::vector<unsigned int> Indices;
 	};
 
+	// Namespace: Math
+	//
+	// Description: The namespace that holds all of the math
+	//	functions need for OBJL
+	namespace math
+	{
+		// Vector3 Cross Product
+		Vector3 CrossV3(const Vector3 a, const Vector3 b)
+		{
+			return Vector3(a.Y * b.Z - a.Z * b.Y,
+				a.Z * b.X - a.X * b.Z,
+				a.X * b.Y - a.Y * b.X);
+		}
+
+		// Vector3 Magnitude Calculation
+		float MagnitudeV3(const Vector3 in)
+		{
+			return (sqrtf(powf(in.X, 2) + powf(in.Y, 2) + powf(in.Z, 2)));
+		}
+
+		// Vector3 DotProduct
+		float DotV3(const Vector3 a, const Vector3 b)
+		{
+			return (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z);
+		}
+
+		// Angle between 2 Vector3 Objects
+		float AngleBetweenV3(const Vector3 a, const Vector3 b)
+		{
+			float angle = DotV3(a, b);
+			angle /= (MagnitudeV3(a) * MagnitudeV3(b));
+			return angle = acosf(angle);
+		}
+	}
+
+	// Namespace: Algorithm
+	//
+	// Description: The namespace that holds all of the
+	// Algorithms needed for OBJL
+	namespace algorithm
+	{
+		// Vector3 Multiplication Opertor Overload
+		Vector3 operator*(const float& left, const Vector3& right)
+		{
+			return Vector3(right.X * left, right.Y * left, right.Z * left);
+		}
+
+		// Check to see if a Vector3 Point is within a 3 Vector3 Triangle
+		bool inTriangle(Vector3 point, Vector3 tri1, Vector3 tri2, Vector3 tri3)
+		{
+			// Starting vars
+			Vector3 u = tri2 - tri1;
+			Vector3 v = tri3 - tri1;
+			Vector3 w = point - tri1;
+			Vector3 n = math::CrossV3(u, v);
+
+			float y = (math::DotV3(math::CrossV3(u, w), n) / math::DotV3(n, n));
+			float b = (math::DotV3(math::CrossV3(u, w), n) / math::DotV3(n, n));
+			float a = 1 - y - b;
+
+			// Projected point
+			Vector3  p = (a * tri1) + (b * tri2) + (y * tri3);
+
+			if (a >= 0 && a <= 1
+				&& b >= 0 && b <= 1
+				&& y >= 0 && y <= 1)
+			{
+				return true;
+			}
+			else
+				return false;
+		}
+
+		// Split a String into a string array at a given token
+		inline void split(const std::string &in,
+			std::vector<std::string> &out,
+			std::string token)
+		{
+			out.clear();
+
+			std::string temp;
+
+			for (int i = 0; i < int(in.size()); i++)
+			{
+				std::string test = in.substr(i, token.size());
+
+				if (test == token)
+				{
+					if (!temp.empty())
+					{
+						out.push_back(temp);
+						temp.clear();
+						i += token.size() - 1;
+					}
+					else
+					{
+						out.push_back("");
+					}
+				}
+				else if (i + token.size() >= in.size())
+				{
+					temp += in.substr(i, token.size());
+					out.push_back(temp);
+					break;
+				}
+				else
+				{
+					temp += in[i];
+				}
+			}
+		}
+	}
+
+	// Class: Loader
+	//
+	// Description: The OBJ Model Loader
 	class Loader
 	{
 	public:
+		// Default Constructor
 		Loader()
 		{
 
 		}
 
+		// Load a file into the loader
+		//
+		// If file is loaded return true
+		//
+		// If the file is unable to be found
+		// or unable to be loaded return false
 		bool LoadFile(std::string Path)
 		{
 			std::ifstream file(Path);
@@ -217,8 +294,8 @@ namespace objl
 				return false;
 
 			LoadedMeshes.clear();
-			LoadedVertices.clear();
-			LoadedIndices.clear();
+			//LoadedVertices.clear();
+			//LoadedIndices.clear();
 
 			std::vector<Vector3> Positions;
 			std::vector<Vector2> TCoords;
@@ -235,6 +312,7 @@ namespace objl
 			std::string curline;
 			while (std::getline(file, curline))
 			{
+				// Generate a Mesh Object or Prepare for an object to be created
 				if (curline.substr(0, 2) == "o " || curline.substr(0, 2) == "g " || curline[0] == 'g')
 				{
 					if (!listening)
@@ -283,11 +361,12 @@ namespace objl
 						}
 					}
 				}
+				// Generate a Vertex Position
 				if (curline.substr(0, 2) == "v ")
 				{
 					std::vector<std::string> spos;
 					Vector3 vpos;
-					split(curline.substr(2, curline.size() - 1), spos, " ");
+					algorithm::split(curline.substr(2, curline.size() - 1), spos, " ");
 
 					vpos.X = std::stof(spos[0]);
 					vpos.Y = std::stof(spos[1]);
@@ -295,22 +374,24 @@ namespace objl
 
 					Positions.push_back(vpos);
 				}
+				// Generate a Vertex Texture Coordinate
 				if (curline.substr(0, 3) == "vt ")
 				{
 					std::vector<std::string> stex;
 					Vector2 vtex;
-					split(curline.substr(3, curline.size()), stex, " ");
+					algorithm::split(curline.substr(3, curline.size()), stex, " ");
 
 					vtex.X = std::stof(stex[0]);
 					vtex.Y = std::stof(stex[1]);
 
 					TCoords.push_back(vtex);
 				}
+				// Generate a Vertex Normal;
 				if (curline.substr(0, 3) == "vn ")
 				{
 					std::vector<std::string> snor;
 					Vector3 vnor;
-					split(curline.substr(3, curline.size()), snor, " ");
+					algorithm::split(curline.substr(3, curline.size()), snor, " ");
 
 					vnor.X = std::stof(snor[0]);
 					vnor.Y = std::stof(snor[1]);
@@ -318,6 +399,7 @@ namespace objl
 
 					Normals.push_back(vnor);
 				}
+				// Generate a Face (vertices & indices)
 				if (curline.substr(0, 2) == "f ")
 				{
 					// Generate the vertices
@@ -328,6 +410,7 @@ namespace objl
 					for (int i = 0; i < int(vVerts.size()); i++)
 					{
 						Vertices.push_back(vVerts[i]);
+
 					}
 
 					std::vector<unsigned int> iIndices;
@@ -339,6 +422,7 @@ namespace objl
 					{
 						int indnum = ((Vertices.size()) - vVerts.size()) + iIndices[i];
 						Indices.push_back(indnum);
+
 					}
 				}
 			}
@@ -356,13 +440,24 @@ namespace objl
 			}
 
 			file.close();
+
+			if (LoadedMeshes.empty())//&& LoadedVertices.empty() && LoadedIndices.empty())
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
 		}
 
 		std::vector<Mesh> LoadedMeshes;
-		std::vector<Vertex> LoadedVertices;
-		std::vector<unsigned int> LoadedIndices;
+		//std::vector<Vertex> LoadedVertices;
+		//std::vector<unsigned int> LoadedIndices;
 
 	private:
+		// Generate vertices from a list of positions, 
+		//	tcoords, normals and a face line
 		void GenVerticesFromRawOBJ(std::vector<Vertex>& oVerts,
 			const std::vector<Vector3>& iPositions,
 			const std::vector<Vector2>& iTCoords,
@@ -371,7 +466,7 @@ namespace objl
 		{
 			std::vector<std::string> sface, svert;
 			Vertex vVert;
-			split(icurline.substr(2, icurline.size()), sface, " ");
+			algorithm::split(icurline.substr(2, icurline.size()), sface, " ");
 
 			bool noNormal = false;
 
@@ -381,7 +476,7 @@ namespace objl
 				// See What type the vertex is.
 				int vtype;
 
-				split(sface[i], svert, "/");
+				algorithm::split(sface[i], svert, "/");
 
 				// Check for just position - v1
 				if (svert.size() == 1)
@@ -463,7 +558,7 @@ namespace objl
 				Vector3 A = oVerts[0].Position - oVerts[1].Position;
 				Vector3 B = oVerts[2].Position - oVerts[1].Position;
 
-				Vector3 normal = CrossV3(A, B);
+				Vector3 normal = math::CrossV3(A, B);
 
 				for (int i = 0; i < int(oVerts.size()); i++)
 				{
@@ -472,6 +567,8 @@ namespace objl
 			}
 		}
 
+		// Triangulate a list of vertices into a face by printing
+		//	inducies corresponding with triangles within it
 		void VertexTriangluation(std::vector<unsigned int>& oIndices,
 			const std::vector<Vertex>& iVerts)
 		{
@@ -583,7 +680,7 @@ namespace objl
 					}
 
 					// If Vertex is not an interior vertex
-					float angle = AngleBetweenV3(pPrev.Position - pCur.Position, pNext.Position - pCur.Position) * (180 / 3.14159265359);
+					float angle = math::AngleBetweenV3(pPrev.Position - pCur.Position, pNext.Position - pCur.Position) * (180 / 3.14159265359);
 					if (angle <= 0 && angle >= 180)
 						continue;
 
@@ -591,7 +688,7 @@ namespace objl
 					bool inTri = false;
 					for (int j = 0; j < int(iVerts.size()); j++)
 					{
-						if (inTriangle(iVerts[j].Position, pPrev.Position, pCur.Position, pNext.Position)
+						if (algorithm::inTriangle(iVerts[j].Position, pPrev.Position, pCur.Position, pNext.Position)
 							&& iVerts[j].Position != pPrev.Position
 							&& iVerts[j].Position != pCur.Position
 							&& iVerts[j].Position != pNext.Position)
