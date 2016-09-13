@@ -10,10 +10,10 @@ OBJ Loader is a simple .obj model file loader that will take in a path to a file
 
 ## Quick Use Guide
 
-1. Include OBJ_Loader.h                         #include "OBJ_Loader.h"
-2. Create a Loader Object                       objl::Loader loader
-3. Load a File Into the Loader Object           loader.LoadFile("path_to_object_and_name.obj")
-4. Get What you want out of the Mesh Objects    cout << loader.LoadedMeshes[0].MeshName << endl
+1. Include OBJ_Loader.h:                         '#include "OBJ_Loader.h"'
+2. Create a Loader Object:                       'objl::Loader loader'
+3. Load a File Into the Loader Object:           'loader.LoadFile("path_to_object_and_name.obj")'
+4. Get What you want out of the Mesh Objects:    'cout << loader.LoadedMeshes[0].MeshName << endl'
 
 ## Classes & Structures
 
@@ -21,31 +21,29 @@ These are all of the included classes and only the relevant members and methods.
 
 ### Mesh
 
-std::string MeshName                            The Mesh Name given in the .obj
-std::vector<Vertex> Vertices                    Vertex List
-std::vector<unsigned int> Indices               Index List
+'std::string MeshName' :                            The Mesh Name given in the .obj
+'std::vector<Vertex> Vertices' :                    Vertex List
+'std::vector<unsigned int> Indices' :               Index List
 
 ### Vertex
 
-Vector3 Position                                Position vector
-Vector3 Normal                                  Normal vector
-Vector2 TextureCoordinate                       Texture Coordinate vector
+'Vector3 Position' :                                Position vector
+'Vector3 Normal' :                                  Normal vector
+'Vector2 TextureCoordinate' :                       Texture Coordinate vector
 
 ### Vector3
 
-float X, Y, Z                                   XYZ Position Variables
+'float X, Y, Z' :                                   XYZ Position Variables
 
 ### Vector2
 
-float X, Y                                      XY Position Variables
+'float X, Y' :                                      XY Position Variables
 
 ### Loader
 
-bool LoadFile(sstd::string Path)                Load a file from a path
-                                                    Return true if found and loaded
-                                                    return false if not
+'bool LoadFile(sstd::string Path)' :                Load a file from a path. Return true if found and loaded. Return false if not
                                                     
-std::vector<Mesh> LoadedMeshes                  Loaded Mesh Objects
+'std::vector<Mesh> LoadedMeshes' :                  Loaded Mesh Objects
 
 
 
