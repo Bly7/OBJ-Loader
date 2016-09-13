@@ -1,12 +1,18 @@
-# OBJ LOADER
+# RS OBJ LOADER
+
+The quick to use single header OBJ loader
 
 ## Quick Description
 
-OBJ Loader is a simple .obj File Loader
+OBJ Loader is a simple, header only, .obj model file loader that will take in a path to a file, load it into the Loader class object, then allow you to get the data from each mesh loaded. This does not load any material data. Only Vertices, Indicies, and Meshes. Good for any prototyping where you need a quick .obj model loaded.
 
-## Slightly Longer Description
+## Prerequisites
 
-OBJ Loader is a simple .obj model file loader that will take in a path to a file, load it into the Loader class object, then allow you to get the data from each mesh loaded.
+OBJ Loader was made with compatibility in mind. So you only need the header file to get going as it uses only STD and self made data structures.
+
+## Installation
+
+All you need to to is copy over the OBJ_Loader.h header file, include it in your solution, and you are good to go.
 
 ## Quick Use Guide
 
@@ -44,8 +50,10 @@ These are all of the included classes and only the relevant members and methods.
 1. bool LoadFile(std::string Path) : Load a file from a path. Return true if found and loaded. Return false if not                                                  
 2. std::vector<Mesh> LoadedMeshes : Loaded Mesh Objects
 
+## Credits
 
+Robert Smith
 
 ## License
 
-OBJ Loader uses the MIT license. The MIT license allows free use and modification of the software as long as they provide credit back to me and don't hold me liable for anything that may go wrong. If you want to read the license in full look into the file entitled: LICENSE.md
+OBJ Loader uses the MIT license. The MIT license allows free use and modification of the software as long as they provide credit back to me and don't hold me liable for anything that may go wrong. If you want to read the license in full look into the file entitled: LICENSE
