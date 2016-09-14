@@ -61,3 +61,20 @@ Robert Smith
 ## License
 
 OBJ Loader uses the MIT license. The MIT license allows free use and modification of the software as long as they provide credit back to me and don't hold me liable for anything that may go wrong. If you want to read the license in full look into the file entitled: LICENSE
+
+## Version Information
+
+### Current
+
+Version 1.0
+
+### Upcoming Features
+
+1. Load Material Data
+
+### Version 1.0
+
+1. Base Implementation Done
+2. README Created
+3. LICENSE Created
+4. Mesh Index and Vertex Load Implemented
