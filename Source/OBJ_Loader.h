@@ -558,10 +558,14 @@ namespace objl
 				return true;
 			}
 		}
-
+		
+		// Loaded Mesh Objects
 		std::vector<Mesh> LoadedMeshes;
+		// Loaded Vertex Objects
 		std::vector<Vertex> LoadedVertices;
+		// Loaded Index Positions
 		std::vector<unsigned int> LoadedIndices;
+		// Loaded Material Objects
 		std::vector<Material> LoadedMaterials;
 
 	private:
