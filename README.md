@@ -70,6 +70,9 @@ These are all of the included classes and only the relevant members and methods.
 
 1. bool LoadFile(std::string Path) : Load a file from a path. Return true if found and loaded. Return false if not                                                  
 2. std::vector<Mesh> LoadedMeshes : Loaded Mesh Objects
+3. std::vector<Vertex> LoadedVertices : Loaded Vertex Objects
+4. std::vector<unsigned int> LoadedIndices : Loaded Index Positions
+5. std::vector<Material> LoadedMaterials : Loaded Material Objects
 
 ## Credits
 
