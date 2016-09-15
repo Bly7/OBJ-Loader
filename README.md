@@ -52,7 +52,7 @@ These are all of the included classes and only the relevant members and methods.
 5. float Ns : Specular exponent
 6. float Ni : Optical density
 7. float d : Dissolve variable
-8. int illum : Immuniation variable
+8. int illum : Illumination variable
 9. std::string map_Ka : Ambient texture map name
 10. std::string map_Kd : Diffuse texture map name
 11. std::string map_Ks : Specular texture map name
