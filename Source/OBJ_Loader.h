@@ -991,7 +991,7 @@ namespace objl
 					tempMaterial.map_d = curline.substr(6, curline.size());
 				}
 				// Bump Map
-				if (curline.substr(0, 9) == "map_bump ")
+				if (curline.substr(0, 9) == "map_Bump ")
 				{
 					tempMaterial.map_bump = curline.substr(9, curline.size());
 				}
