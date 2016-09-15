@@ -19,7 +19,9 @@ int main(int argc, char* argv[])
 	objl::Loader Loader;
 
 	// Load .obj File
-	bool loadout = Loader.LoadFile("box_stack.obj");
+	bool loadout = Loader.LoadFile("box_stack/box_stack.obj");
+
+	//bool loadout = Loader.LoadFile("crysis_nano/nanosuit.obj");
 
 	// Check to see if it loaded
 
@@ -60,6 +62,21 @@ int main(int argc, char* argv[])
 			{
 				file << "T" << j / 3 << ": " << curMesh.Indices[j] << ", " << curMesh.Indices[j + 1] << ", " << curMesh.Indices[j + 2] << "\n";
 			}
+
+			// Print Material
+			file << "Material: " << curMesh.MeshMaterial.name << "\n";
+			file << "Ambient Color: " << curMesh.MeshMaterial.Ka.X << ", " << curMesh.MeshMaterial.Ka.Y << ", " << curMesh.MeshMaterial.Ka.Z << "\n";
+			file << "Diffuse Color: " << curMesh.MeshMaterial.Kd.X << ", " << curMesh.MeshMaterial.Kd.Y << ", " << curMesh.MeshMaterial.Kd.Z << "\n";
+			file << "Specular Color: " << curMesh.MeshMaterial.Ks.X << ", " << curMesh.MeshMaterial.Ks.Y << ", " << curMesh.MeshMaterial.Ks.Z << "\n";
+			file << "Specular Exponent: " << curMesh.MeshMaterial.Ns << "\n";
+			file << "Optical Density: " << curMesh.MeshMaterial.Ni << "\n";
+			file << "Dissolve: " << curMesh.MeshMaterial.d << "\n";
+			file << "Illumination: " << curMesh.MeshMaterial.illum << "\n";
+			file << "Ambient Texture Map: " << curMesh.MeshMaterial.map_Ka << "\n";
+			file << "Diffuse Texture Map: " << curMesh.MeshMaterial.map_Kd << "\n";
+			file << "Specular Texture Map: " << curMesh.MeshMaterial.map_Ks << "\n";
+			file << "Alpha Texture Map: " << curMesh.MeshMaterial.map_d << "\n";
+			file << "Bump Map: " << curMesh.MeshMaterial.map_bump << "\n";
 
 			// Leave a space to separate from the next mesh
 			file << "\n";
