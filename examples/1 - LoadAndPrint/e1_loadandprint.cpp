@@ -19,9 +19,7 @@ int main(int argc, char* argv[])
 	objl::Loader Loader;
 
 	// Load .obj File
-	bool loadout = Loader.LoadFile("box_stack/box_stack.obj");
-
-	//bool loadout = Loader.LoadFile("crysis_nano/nanosuit.obj");
+	bool loadout = Loader.LoadFile("box_stack.obj");
 
 	// Check to see if it loaded
 
