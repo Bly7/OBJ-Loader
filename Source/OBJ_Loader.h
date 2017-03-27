@@ -293,7 +293,7 @@ namespace objl
 					{
 						out.push_back(temp);
 						temp.clear();
-						i += token.size() - 1;
+						i += (int)token.size() - 1;
 					}
 					else
 					{
@@ -311,6 +311,40 @@ namespace objl
 					temp += in[i];
 				}
 			}
+		}
+
+		// Get tail of string after first token and possibly following spaces
+		inline std::string tail(const std::string &in)
+		{
+			size_t token_start = in.find_first_not_of(" \t");
+			size_t space_start = in.find_first_of(" \t", token_start);
+			size_t space_end = in.find_first_not_of(" \t", space_start);
+			if (space_end != std::string::npos)
+			{
+				return in.substr(space_end);
+			}
+			return "";
+		}
+
+		// Get first token of string
+		inline std::string firstToken(const std::string &in)
+		{
+			if (in.empty())
+			{
+				return "";
+			}
+			size_t token_start = in.find_first_not_of("	\t");
+			size_t token_end = in.find_first_of(" \t", token_start);
+			if (token_start != std::string::npos && token_end != std::string::npos)
+			{
+				std::string t = in.substr(token_start, token_end);
+				return in.substr(token_start, token_end - token_start);
+			}
+			else if (token_start != std::string::npos)
+			{
+				return in.substr(token_start);
+			}
+			return "";
 		}
 	}
 
@@ -342,7 +376,7 @@ namespace objl
 			if (Path.substr(Path.size() - 4, 4) != ".obj")
 				return false;
 
-			
+
 			std::ifstream file(Path);
 
 			if (!file.is_open())
@@ -370,15 +404,15 @@ namespace objl
 			while (std::getline(file, curline))
 			{
 				// Generate a Mesh Object or Prepare for an object to be created
-				if (curline.substr(0, 2) == "o " || curline.substr(0, 2) == "g " || curline[0] == 'g')
+				if (algorithm::firstToken(curline) == "o" || algorithm::firstToken(curline) == "g" || curline[0] == 'g')
 				{
 					if (!listening)
 					{
 						listening = true;
 
-						if (curline.substr(0, 2) == "o " || curline.substr(0, 2) == "g ")
+						if (algorithm::firstToken(curline) == "o" || algorithm::firstToken(curline) == "g")
 						{
-							meshname = curline.substr(2, curline.size());
+							meshname = algorithm::tail(curline);
 						}
 						else
 						{
@@ -403,13 +437,13 @@ namespace objl
 							Indices.clear();
 							meshname.clear();
 
-							meshname = curline.substr(2, curline.size());
+							meshname = algorithm::tail(curline);
 						}
 						else
 						{
-							if (curline.substr(0, 2) == "o " || curline.substr(0, 2) == "g ")
+							if (algorithm::firstToken(curline) == "o" || algorithm::firstToken(curline) == "g")
 							{
-								meshname = curline.substr(2, curline.size());
+								meshname = algorithm::tail(curline);
 							}
 							else
 							{
@@ -419,11 +453,11 @@ namespace objl
 					}
 				}
 				// Generate a Vertex Position
-				if (curline.substr(0, 2) == "v ")
+				if (algorithm::firstToken(curline) == "v")
 				{
 					std::vector<std::string> spos;
 					Vector3 vpos;
-					algorithm::split(curline.substr(2, curline.size() - 1), spos, " ");
+					algorithm::split(algorithm::tail(curline), spos, " ");
 
 					vpos.X = std::stof(spos[0]);
 					vpos.Y = std::stof(spos[1]);
@@ -432,11 +466,11 @@ namespace objl
 					Positions.push_back(vpos);
 				}
 				// Generate a Vertex Texture Coordinate
-				if (curline.substr(0, 3) == "vt ")
+				if (algorithm::firstToken(curline) == "vt")
 				{
 					std::vector<std::string> stex;
 					Vector2 vtex;
-					algorithm::split(curline.substr(3, curline.size()), stex, " ");
+					algorithm::split(algorithm::tail(curline), stex, " ");
 
 					vtex.X = std::stof(stex[0]);
 					vtex.Y = std::stof(stex[1]);
@@ -444,11 +478,11 @@ namespace objl
 					TCoords.push_back(vtex);
 				}
 				// Generate a Vertex Normal;
-				if (curline.substr(0, 3) == "vn ")
+				if (algorithm::firstToken(curline) == "vn")
 				{
 					std::vector<std::string> snor;
 					Vector3 vnor;
-					algorithm::split(curline.substr(3, curline.size()), snor, " ");
+					algorithm::split(algorithm::tail(curline), snor, " ");
 
 					vnor.X = std::stof(snor[0]);
 					vnor.Y = std::stof(snor[1]);
@@ -457,7 +491,7 @@ namespace objl
 					Normals.push_back(vnor);
 				}
 				// Generate a Face (vertices & indices)
-				if (curline.substr(0, 2) == "f ")
+				if (algorithm::firstToken(curline) == "f")
 				{
 					// Generate the vertices
 					std::vector<Vertex> vVerts;
@@ -478,21 +512,21 @@ namespace objl
 					// Add Indices
 					for (int i = 0; i < int(iIndices.size()); i++)
 					{
-						int indnum = ((Vertices.size()) - vVerts.size()) + iIndices[i];
+						unsigned int indnum = (unsigned int)((Vertices.size()) - vVerts.size()) + iIndices[i];
 						Indices.push_back(indnum);
 
-						indnum = ((LoadedVertices.size()) - vVerts.size()) + iIndices[i];
+						indnum = (unsigned int)((LoadedVertices.size()) - vVerts.size()) + iIndices[i];
 						LoadedIndices.push_back(indnum);
 
 					}
 				}
 				// Get Mesh Material Name
-				if (curline.substr(0, 7) == "usemtl ")
+				if (algorithm::firstToken(curline) == "usemtl")
 				{
-					MeshMatNames.push_back(curline.substr(7, curline.size()));
+					MeshMatNames.push_back(algorithm::tail(curline));
 				}
 				// Load Materials
-				if (curline.substr(0, 7) == "mtllib ")
+				if (algorithm::firstToken(curline) == "mtllib")
 				{
 					// Generate LoadedMaterial
 
@@ -504,14 +538,14 @@ namespace objl
 
 					if (temp.size() != 1)
 					{
-						for (int i = 0; i < temp.size()-1; i++)
+						for (int i = 0; i < temp.size() - 1; i++)
 						{
 							pathtomat += temp[i] + "/";
 						}
 					}
 
 
-					pathtomat += curline.substr(7, curline.size());
+					pathtomat += algorithm::tail(curline);
 
 					// Load Materials
 					LoadMaterials(pathtomat);
@@ -558,7 +592,7 @@ namespace objl
 				return true;
 			}
 		}
-		
+
 		// Loaded Mesh Objects
 		std::vector<Mesh> LoadedMeshes;
 		// Loaded Vertex Objects
@@ -579,7 +613,7 @@ namespace objl
 		{
 			std::vector<std::string> sface, svert;
 			Vertex vVert;
-			algorithm::split(icurline.substr(2, icurline.size()), sface, " ");
+			algorithm::split(algorithm::tail(icurline), sface, " ");
 
 			bool noNormal = false;
 
@@ -626,7 +660,7 @@ namespace objl
 				{
 				case 1: // P
 				{
-					vVert.Position = iPositions[stoi(svert[0]) - 1];
+					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
 					vVert.TextureCoordinate = Vector2(0, 0);
 					noNormal = true;
 					oVerts.push_back(vVert);
@@ -634,25 +668,25 @@ namespace objl
 				}
 				case 2: // P/T
 				{
-					vVert.Position = iPositions[stoi(svert[0]) - 1];
-					vVert.TextureCoordinate = iTCoords[stoi(svert[1]) - 1];
+					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
+					vVert.TextureCoordinate = iTCoords[std::abs(std::stoi(svert[1])) - 1];
 					noNormal = true;
 					oVerts.push_back(vVert);
 					break;
 				}
 				case 3: // P//N
 				{
-					vVert.Position = iPositions[stoi(svert[0]) - 1];
+					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
 					vVert.TextureCoordinate = Vector2(0, 0);
-					vVert.Normal = iNormals[stoi(svert[2]) - 1];
+					vVert.Normal = iNormals[std::abs(std::stoi(svert[2])) - 1];
 					oVerts.push_back(vVert);
 					break;
 				}
 				case 4: // P/T/N
 				{
-					vVert.Position = iPositions[stoi(svert[0]) - 1];
-					vVert.TextureCoordinate = iTCoords[stoi(svert[1]) - 1];
-					vVert.Normal = iNormals[stoi(svert[2]) - 1];
+					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
+					vVert.TextureCoordinate = iTCoords[std::abs(std::stoi(svert[1])) - 1];
+					vVert.Normal = iNormals[std::abs(std::stoi(svert[2])) - 1];
 					oVerts.push_back(vVert);
 					break;
 				}
@@ -871,7 +905,7 @@ namespace objl
 			while (std::getline(file, curline))
 			{
 				// new material and material name
-				if (curline.substr(0, 7) == "newmtl ")
+				if (algorithm::firstToken(curline) == "newmtl")
 				{
 					if (!listening)
 					{
@@ -879,7 +913,7 @@ namespace objl
 
 						if (curline.size() > 7)
 						{
-							tempMaterial.name = curline.substr(7, curline.size());
+							tempMaterial.name = algorithm::tail(curline);
 						}
 						else
 						{
@@ -898,7 +932,7 @@ namespace objl
 
 						if (curline.size() > 7)
 						{
-							tempMaterial.name = curline.substr(7, curline.size());
+							tempMaterial.name = algorithm::tail(curline);
 						}
 						else
 						{
@@ -907,10 +941,10 @@ namespace objl
 					}
 				}
 				// Ambient Color
-				if (curline.substr(0, 3) == "Ka ")
+				if (algorithm::firstToken(curline) == "Ka")
 				{
 					std::vector<std::string> temp;
-					algorithm::split(curline.substr(3, curline.size()), temp, " ");
+					algorithm::split(algorithm::tail(curline), temp, " ");
 
 					if (temp.size() != 3)
 						continue;
@@ -920,10 +954,10 @@ namespace objl
 					tempMaterial.Ka.Z = std::stof(temp[2]);
 				}
 				// Diffuse Color
-				if (curline.substr(0, 3) == "Kd ")
+				if (algorithm::firstToken(curline) == "Kd")
 				{
 					std::vector<std::string> temp;
-					algorithm::split(curline.substr(3, curline.size()), temp, " ");
+					algorithm::split(algorithm::tail(curline), temp, " ");
 
 					if (temp.size() != 3)
 						continue;
@@ -933,10 +967,10 @@ namespace objl
 					tempMaterial.Kd.Z = std::stof(temp[2]);
 				}
 				// Specular Color
-				if (curline.substr(0, 3) == "Ks ")
+				if (algorithm::firstToken(curline) == "Ks")
 				{
 					std::vector<std::string> temp;
-					algorithm::split(curline.substr(3, curline.size()), temp, " ");
+					algorithm::split(algorithm::tail(curline), temp, " ");
 
 					if (temp.size() != 3)
 						continue;
@@ -946,54 +980,54 @@ namespace objl
 					tempMaterial.Ks.Z = std::stof(temp[2]);
 				}
 				// Specular Exponent
-				if (curline.substr(0, 3) == "Ns ")
+				if (algorithm::firstToken(curline) == "Ns")
 				{
-					tempMaterial.Ns = std::stof(curline.substr(3, curline.size()));
+					tempMaterial.Ns = std::stof(algorithm::tail(curline));
 				}
 				// Optical Density
-				if (curline.substr(0, 3) == "Ni ")
+				if (algorithm::firstToken(curline) == "Ni")
 				{
-					tempMaterial.Ni = std::stof(curline.substr(3, curline.size()));
+					tempMaterial.Ni = std::stof(algorithm::tail(curline));
 				}
 				// Dissolve
-				if (curline.substr(0, 2) == "d ")
+				if (algorithm::firstToken(curline) == "d")
 				{
-					tempMaterial.d = std::stof(curline.substr(2, curline.size()));
+					tempMaterial.d = std::stof(algorithm::tail(curline));
 				}
 				// Illumination
-				if (curline.substr(0, 6) == "illum ")
+				if (algorithm::firstToken(curline) == "illum")
 				{
-					tempMaterial.illum = std::stoi(curline.substr(6, curline.size()));
+					tempMaterial.illum = std::stoi(algorithm::tail(curline));
 				}
 				// Ambient Texture Map
-				if (curline.substr(0, 7) == "map_Ka ")
+				if (algorithm::firstToken(curline) == "map_Ka")
 				{
-					tempMaterial.map_Ka = curline.substr(7, curline.size());
+					tempMaterial.map_Ka = algorithm::tail(curline);
 				}
 				// Diffuse Texture Map
-				if (curline.substr(0, 7) == "map_Kd ")
+				if (algorithm::firstToken(curline) == "map_Kd")
 				{
-					tempMaterial.map_Kd = curline.substr(7, curline.size());
+					tempMaterial.map_Kd = algorithm::tail(curline);
 				}
 				// Specular Texture Map
-				if (curline.substr(0, 7) == "map_Ks ")
+				if (algorithm::firstToken(curline) == "map_Ks")
 				{
-					tempMaterial.map_Ks = curline.substr(7, curline.size());
+					tempMaterial.map_Ks = algorithm::tail(curline);
 				}
 				// Specular Hightlight Map
-				if (curline.substr(0, 7) == "map_Ns ")
+				if (algorithm::firstToken(curline) == "map_Ns")
 				{
-					tempMaterial.map_Ns = curline.substr(7, curline.size());
+					tempMaterial.map_Ns = algorithm::tail(curline);
 				}
 				// Alpha Texture Map
-				if (curline.substr(0, 6) == "map_d ")
+				if (algorithm::firstToken(curline) == "map_d")
 				{
-					tempMaterial.map_d = curline.substr(6, curline.size());
+					tempMaterial.map_d = algorithm::tail(curline);
 				}
 				// Bump Map
-				if (curline.substr(0, 9) == "map_Bump ")
+				if (algorithm::firstToken(curline) == "map_Bump")
 				{
-					tempMaterial.map_bump = curline.substr(9, curline.size());
+					tempMaterial.map_bump = algorithm::tail(curline);
 				}
 			}
 
