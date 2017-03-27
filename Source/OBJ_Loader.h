@@ -11,6 +11,9 @@
 // fStream - STD File I/O Library
 #include <fstream>
 
+// Print progress to console while loading (large models)
+#define OBJL_CONSOLE_OUTPUT
+
 // Namespace: OBJL
 //
 // Description: The namespace that holds eveyrthing that
@@ -400,6 +403,11 @@ namespace objl
 
 			Mesh tempMesh;
 
+			#ifdef OBJL_CONSOLE_OUTPUT
+			unsigned int outputIndicator = 0;
+			const unsigned int outputEveryNth = 1000;
+			#endif
+
 			std::string curline;
 			while (std::getline(file, curline))
 			{
@@ -451,6 +459,10 @@ namespace objl
 							}
 						}
 					}
+					#ifdef OBJL_CONSOLE_OUTPUT
+					std::cout << std::endl << "- part: " << meshname << std::endl;
+					outputIndicator = 0;
+					#endif
 				}
 				// Generate a Vertex Position
 				if (algorithm::firstToken(curline) == "v")
@@ -464,6 +476,13 @@ namespace objl
 					vpos.Z = std::stof(spos[2]);
 
 					Positions.push_back(vpos);
+
+					#ifdef OBJL_CONSOLE_OUTPUT
+					if (++outputIndicator >= outputEveryNth) {
+						outputIndicator = 0;
+						std::cout << "\r- vertices: " << Positions.size();
+					}
+					#endif
 				}
 				// Generate a Vertex Texture Coordinate
 				if (algorithm::firstToken(curline) == "vt")
@@ -476,6 +495,13 @@ namespace objl
 					vtex.Y = std::stof(stex[1]);
 
 					TCoords.push_back(vtex);
+
+					#ifdef OBJL_CONSOLE_OUTPUT
+					if (++outputIndicator >= outputEveryNth) {
+						outputIndicator = 0;
+						std::cout << "\r- texture coords: " << TCoords.size();
+					}
+					#endif
 				}
 				// Generate a Vertex Normal;
 				if (algorithm::firstToken(curline) == "vn")
@@ -489,6 +515,13 @@ namespace objl
 					vnor.Z = std::stof(snor[2]);
 
 					Normals.push_back(vnor);
+
+					#ifdef OBJL_CONSOLE_OUTPUT
+					if (++outputIndicator >= outputEveryNth) {
+						outputIndicator = 0;
+						std::cout << "\r- normals: " << Normals.size();
+					}
+					#endif
 				}
 				// Generate a Face (vertices & indices)
 				if (algorithm::firstToken(curline) == "f")
@@ -519,11 +552,22 @@ namespace objl
 						LoadedIndices.push_back(indnum);
 
 					}
+
+					#ifdef OBJL_CONSOLE_OUTPUT
+					if (++outputIndicator >= outputEveryNth) {
+						outputIndicator = 0;
+						std::cout << "\r- triangles: " << (Vertices.size() / 3);
+					}
+					#endif
 				}
 				// Get Mesh Material Name
 				if (algorithm::firstToken(curline) == "usemtl")
 				{
 					MeshMatNames.push_back(algorithm::tail(curline));
+
+					#ifdef OBJL_CONSOLE_OUTPUT
+					std::cout << std::endl << "- use material: " << MeshMatNames.back() << std::endl;
+					#endif
 				}
 				// Load Materials
 				if (algorithm::firstToken(curline) == "mtllib")
@@ -546,6 +590,10 @@ namespace objl
 
 
 					pathtomat += algorithm::tail(curline);
+
+					#ifdef OBJL_CONSOLE_OUTPUT
+					std::cout << std::endl << "- find materials in: " << pathtomat << std::endl;
+					#endif
 
 					// Load Materials
 					LoadMaterials(pathtomat);
