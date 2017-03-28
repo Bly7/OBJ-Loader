@@ -553,6 +553,30 @@ namespace objl
 				{
 					MeshMatNames.push_back(algorithm::tail(curline));
 
+					// Create new Mesh, if Material changes within a group
+					if (!Indices.empty() && !Vertices.empty())
+					{
+						// Create Mesh
+						tempMesh = Mesh(Vertices, Indices);
+						tempMesh.MeshName = meshname;
+						int i = 2;
+						while(1) {
+							tempMesh.MeshName = meshname + "_" + std::to_string(i);
+
+							for (auto &m : LoadedMeshes)
+								if (m.MeshName == tempMesh.MeshName)
+									continue;
+							break;
+						}
+
+						// Insert Mesh
+						LoadedMeshes.push_back(tempMesh);
+
+						// Cleanup
+						Vertices.clear();
+						Indices.clear();
+					}
+
 					#ifdef OBJL_CONSOLE_OUTPUT
 					outputIndicator = 0;
 					#endif
@@ -1065,7 +1089,7 @@ namespace objl
 					tempMaterial.map_d = algorithm::tail(curline);
 				}
 				// Bump Map
-				if (algorithm::firstToken(curline) == "map_Bump")
+				if (algorithm::firstToken(curline) == "map_Bump" || algorithm::firstToken(curline) == "map_bump")
 				{
 					tempMaterial.map_bump = algorithm::tail(curline);
 				}
