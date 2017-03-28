@@ -404,13 +404,29 @@ namespace objl
 			Mesh tempMesh;
 
 			#ifdef OBJL_CONSOLE_OUTPUT
-			unsigned int outputIndicator = 0;
 			const unsigned int outputEveryNth = 1000;
+			unsigned int outputIndicator = outputEveryNth;
 			#endif
 
 			std::string curline;
 			while (std::getline(file, curline))
 			{
+				#ifdef OBJL_CONSOLE_OUTPUT
+				if ((outputIndicator = ((outputIndicator + 1) % outputEveryNth)) == 1)
+				{
+					if (!meshname.empty())
+					{
+						std::cout
+							<< "\r- " << meshname
+							<< "\t| vertices > " << Positions.size()
+							<< "\t| texcoords > " << TCoords.size()
+							<< "\t| normals > " << Normals.size()
+							<< "\t| triangles > " << (Vertices.size() / 3)
+							<< (!MeshMatNames.empty() ? "\t| material: " + MeshMatNames.back() : "");
+					}
+				}
+				#endif
+
 				// Generate a Mesh Object or Prepare for an object to be created
 				if (algorithm::firstToken(curline) == "o" || algorithm::firstToken(curline) == "g" || curline[0] == 'g')
 				{
@@ -460,7 +476,7 @@ namespace objl
 						}
 					}
 					#ifdef OBJL_CONSOLE_OUTPUT
-					std::cout << std::endl << "- part: " << meshname << std::endl;
+					std::cout << std::endl;
 					outputIndicator = 0;
 					#endif
 				}
@@ -476,13 +492,6 @@ namespace objl
 					vpos.Z = std::stof(spos[2]);
 
 					Positions.push_back(vpos);
-
-					#ifdef OBJL_CONSOLE_OUTPUT
-					if (++outputIndicator >= outputEveryNth) {
-						outputIndicator = 0;
-						std::cout << "\r- vertices: " << Positions.size();
-					}
-					#endif
 				}
 				// Generate a Vertex Texture Coordinate
 				if (algorithm::firstToken(curline) == "vt")
@@ -495,13 +504,6 @@ namespace objl
 					vtex.Y = std::stof(stex[1]);
 
 					TCoords.push_back(vtex);
-
-					#ifdef OBJL_CONSOLE_OUTPUT
-					if (++outputIndicator >= outputEveryNth) {
-						outputIndicator = 0;
-						std::cout << "\r- texture coords: " << TCoords.size();
-					}
-					#endif
 				}
 				// Generate a Vertex Normal;
 				if (algorithm::firstToken(curline) == "vn")
@@ -515,13 +517,6 @@ namespace objl
 					vnor.Z = std::stof(snor[2]);
 
 					Normals.push_back(vnor);
-
-					#ifdef OBJL_CONSOLE_OUTPUT
-					if (++outputIndicator >= outputEveryNth) {
-						outputIndicator = 0;
-						std::cout << "\r- normals: " << Normals.size();
-					}
-					#endif
 				}
 				// Generate a Face (vertices & indices)
 				if (algorithm::firstToken(curline) == "f")
@@ -552,13 +547,6 @@ namespace objl
 						LoadedIndices.push_back(indnum);
 
 					}
-
-					#ifdef OBJL_CONSOLE_OUTPUT
-					if (++outputIndicator >= outputEveryNth) {
-						outputIndicator = 0;
-						std::cout << "\r- triangles: " << (Vertices.size() / 3);
-					}
-					#endif
 				}
 				// Get Mesh Material Name
 				if (algorithm::firstToken(curline) == "usemtl")
@@ -566,7 +554,7 @@ namespace objl
 					MeshMatNames.push_back(algorithm::tail(curline));
 
 					#ifdef OBJL_CONSOLE_OUTPUT
-					std::cout << std::endl << "- use material: " << MeshMatNames.back() << std::endl;
+					outputIndicator = 0;
 					#endif
 				}
 				// Load Materials
@@ -599,6 +587,10 @@ namespace objl
 					LoadMaterials(pathtomat);
 				}
 			}
+
+			#ifdef OBJL_CONSOLE_OUTPUT
+			std::cout << std::endl;
+			#endif
 
 			// Deal with last mesh
 
