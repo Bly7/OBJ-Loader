@@ -349,6 +349,18 @@ namespace objl
 			}
 			return "";
 		}
+
+		// Get element at given index position
+		template <class T>
+		inline const T & getElement(const std::vector<T> &elements, std::string &index)
+		{
+			int idx = std::stoi(index);
+			if (idx < 0)
+				idx = int(elements.size()) + idx;
+			else
+				idx--;
+			return elements[idx];
+		}
 	}
 
 	// Class: Loader
@@ -724,7 +736,7 @@ namespace objl
 				{
 				case 1: // P
 				{
-					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
+					vVert.Position = algorithm::getElement(iPositions, svert[0]);
 					vVert.TextureCoordinate = Vector2(0, 0);
 					noNormal = true;
 					oVerts.push_back(vVert);
@@ -732,25 +744,25 @@ namespace objl
 				}
 				case 2: // P/T
 				{
-					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
-					vVert.TextureCoordinate = iTCoords[std::abs(std::stoi(svert[1])) - 1];
+					vVert.Position = algorithm::getElement(iPositions, svert[0]);
+					vVert.TextureCoordinate = algorithm::getElement(iTCoords, svert[1]);
 					noNormal = true;
 					oVerts.push_back(vVert);
 					break;
 				}
 				case 3: // P//N
 				{
-					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
+					vVert.Position = algorithm::getElement(iPositions, svert[0]);
 					vVert.TextureCoordinate = Vector2(0, 0);
-					vVert.Normal = iNormals[std::abs(std::stoi(svert[2])) - 1];
+					vVert.Normal = algorithm::getElement(iNormals, svert[2]);
 					oVerts.push_back(vVert);
 					break;
 				}
 				case 4: // P/T/N
 				{
-					vVert.Position = iPositions[std::abs(std::stoi(svert[0])) - 1];
-					vVert.TextureCoordinate = iTCoords[std::abs(std::stoi(svert[1])) - 1];
-					vVert.Normal = iNormals[std::abs(std::stoi(svert[2])) - 1];
+					vVert.Position = algorithm::getElement(iPositions, svert[0]);
+					vVert.TextureCoordinate = algorithm::getElement(iTCoords, svert[1]);
+					vVert.Normal = algorithm::getElement(iNormals, svert[2]);
 					oVerts.push_back(vVert);
 					break;
 				}
