@@ -332,20 +332,19 @@ namespace objl
 		// Get first token of string
 		inline std::string firstToken(const std::string &in)
 		{
-			if (in.empty())
+			if (!in.empty())
 			{
-				return "";
-			}
-			size_t token_start = in.find_first_not_of("	\t");
-			size_t token_end = in.find_first_of(" \t", token_start);
-			if (token_start != std::string::npos && token_end != std::string::npos)
-			{
-				std::string t = in.substr(token_start, token_end);
-				return in.substr(token_start, token_end - token_start);
-			}
-			else if (token_start != std::string::npos)
-			{
-				return in.substr(token_start);
+				size_t token_start = in.find_first_not_of(" \t");
+				size_t token_end = in.find_first_of(" \t", token_start);
+				if (token_start != std::string::npos && token_end != std::string::npos)
+				{
+					std::string t = in.substr(token_start, token_end);
+					return in.substr(token_start, token_end - token_start);
+				}
+				else if (token_start != std::string::npos)
+				{
+					return in.substr(token_start);
+				}
 			}
 			return "";
 		}
