@@ -321,10 +321,15 @@ namespace objl
 		{
 			size_t token_start = in.find_first_not_of(" \t");
 			size_t space_start = in.find_first_of(" \t", token_start);
-			size_t space_end = in.find_first_not_of(" \t", space_start);
-			if (space_end != std::string::npos)
+			size_t tail_start = in.find_first_not_of(" \t", space_start);
+			size_t tail_end = in.find_last_not_of(" \t");
+			if (tail_start != std::string::npos && tail_end != std::string::npos)
 			{
-				return in.substr(space_end);
+				return in.substr(tail_start, tail_end - tail_start + 1);
+			}
+			else if (tail_start != std::string::npos)
+			{
+				return in.substr(tail_start);
 			}
 			return "";
 		}
@@ -338,7 +343,6 @@ namespace objl
 				size_t token_end = in.find_first_of(" \t", token_start);
 				if (token_start != std::string::npos && token_end != std::string::npos)
 				{
-					std::string t = in.substr(token_start, token_end);
 					return in.substr(token_start, token_end - token_start);
 				}
 				else if (token_start != std::string::npos)
