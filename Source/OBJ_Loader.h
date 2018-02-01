@@ -1104,7 +1104,7 @@ namespace objl
 					tempMaterial.map_d = algorithm::tail(curline);
 				}
 				// Bump Map
-				if (algorithm::firstToken(curline) == "map_Bump" || algorithm::firstToken(curline) == "map_bump")
+				if (algorithm::firstToken(curline) == "map_Bump" || algorithm::firstToken(curline) == "map_bump" || algorithm::firstToken(curline) == "bump")
 				{
 					tempMaterial.map_bump = algorithm::tail(curline);
 				}
