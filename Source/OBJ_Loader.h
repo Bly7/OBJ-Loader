@@ -2,6 +2,9 @@
 
 #pragma once
 
+// Iostream - STD I/O Library
+#include <iostream>
+
 // Vector - STD Vector/Array Library
 #include <vector>
 
@@ -10,6 +13,9 @@
 
 // fStream - STD File I/O Library
 #include <fstream>
+
+// Math.h - STD math Library
+#include <math.h>
 
 // Print progress to console while loading (large models)
 #define OBJL_CONSOLE_OUTPUT
@@ -1138,7 +1144,7 @@ namespace objl
 					tempMaterial.map_d = algorithm::tail(curline);
 				}
 				// Bump Map
-				if (algorithm::firstToken(curline) == "map_Bump" || algorithm::firstToken(curline) == "map_bump")
+				if (algorithm::firstToken(curline) == "map_Bump" || algorithm::firstToken(curline) == "map_bump" || algorithm::firstToken(curline) == "bump")
 				{
 					tempMaterial.map_bump = algorithm::tail(curline);
 				}
