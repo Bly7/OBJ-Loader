@@ -14,8 +14,8 @@
 // fStream - STD File I/O Library
 #include <fstream>
 
-// Math.h - STD math Library
-#include <math.h>
+// Cmath - STD math Library
+#include <cmath>
 
 // Locale.h - C locale library
 #include <locale.h>
