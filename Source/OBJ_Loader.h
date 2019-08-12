@@ -153,7 +153,6 @@ namespace objl
 	{
 		Material()
 		{
-			name;
 			Ns = 0.0f;
 			Ni = 0.0f;
 			d = 0.0f;
