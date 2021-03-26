@@ -90,6 +90,8 @@ Version 2.0
 
 ### Upcoming Features
 
+---- THIS IS NO LONGER BEING SUPPORTED ----
+
 1. Bug Fixing
 2. Adding more variables
 
