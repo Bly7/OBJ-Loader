@@ -14,8 +14,11 @@
 // fStream - STD File I/O Library
 #include <fstream>
 
-// Math.h - STD math Library
-#include <math.h>
+// Cmath - STD math Library
+#include <cmath>
+
+// Locale.h - C locale library
+#include <locale.h>
 
 // Print progress to console while loading (large models)
 #define OBJL_CONSOLE_OUTPUT
@@ -150,7 +153,6 @@ namespace objl
 	{
 		Material()
 		{
-			name;
 			Ns = 0.0f;
 			Ni = 0.0f;
 			d = 0.0f;
@@ -404,6 +406,26 @@ namespace objl
 				idx--;
 			return elements[idx];
 		}
+
+		// Locale insensitive stof
+		float li_stof (const std::string& str)
+		{
+			char* point = localeconv()->decimal_point;
+
+			if (std::string(".") != point)
+			{
+				unsigned long point_it = str.find(".");
+				std::string temp_str = str;
+
+				temp_str.replace(point_it, point_it + 1, point);
+
+				return std::stof(temp_str);
+			}
+			else
+			{
+				return std::stof(str);
+			}
+		}
 	}
 
 	// Class: Loader
@@ -542,9 +564,9 @@ namespace objl
 					Vector3 vpos;
 					algorithm::split(algorithm::tail(curline), spos, " ");
 
-					vpos.X = std::stof(spos[0]);
-					vpos.Y = std::stof(spos[1]);
-					vpos.Z = std::stof(spos[2]);
+					vpos.X = algorithm::li_stof(spos[0]);
+					vpos.Y = algorithm::li_stof(spos[1]);
+					vpos.Z = algorithm::li_stof(spos[2]);
 
 					Positions.push_back(vpos);
 				}
@@ -555,8 +577,8 @@ namespace objl
 					Vector2 vtex;
 					algorithm::split(algorithm::tail(curline), stex, " ");
 
-					vtex.X = std::stof(stex[0]);
-					vtex.Y = std::stof(stex[1]);
+					vtex.X = algorithm::li_stof(stex[0]);
+					vtex.Y = algorithm::li_stof(stex[1]);
 
 					TCoords.push_back(vtex);
 				}
@@ -567,9 +589,9 @@ namespace objl
 					Vector3 vnor;
 					algorithm::split(algorithm::tail(curline), snor, " ");
 
-					vnor.X = std::stof(snor[0]);
-					vnor.Y = std::stof(snor[1]);
-					vnor.Z = std::stof(snor[2]);
+					vnor.X = algorithm::li_stof(snor[0]);
+					vnor.Y = algorithm::li_stof(snor[1]);
+					vnor.Z = algorithm::li_stof(snor[2]);
 
 					Normals.push_back(vnor);
 				}
@@ -947,7 +969,7 @@ namespace objl
 
 					// If Vertex is not an interior vertex
 					float angle = math::AngleBetweenV3(pPrev.Position - pCur.Position, pNext.Position - pCur.Position) * (180 / 3.14159265359);
-					if (angle <= 0 && angle >= 180)
+					if (angle <= 0 || angle >= 180)
 						continue;
 
 					// If any vertices are within this triangle
@@ -1068,9 +1090,9 @@ namespace objl
 					if (temp.size() != 3)
 						continue;
 
-					tempMaterial.Ka.X = std::stof(temp[0]);
-					tempMaterial.Ka.Y = std::stof(temp[1]);
-					tempMaterial.Ka.Z = std::stof(temp[2]);
+					tempMaterial.Ka.X = algorithm::li_stof(temp[0]);
+					tempMaterial.Ka.Y = algorithm::li_stof(temp[1]);
+					tempMaterial.Ka.Z = algorithm::li_stof(temp[2]);
 				}
 				// Diffuse Color
 				if (algorithm::firstToken(curline) == "Kd")
@@ -1081,9 +1103,9 @@ namespace objl
 					if (temp.size() != 3)
 						continue;
 
-					tempMaterial.Kd.X = std::stof(temp[0]);
-					tempMaterial.Kd.Y = std::stof(temp[1]);
-					tempMaterial.Kd.Z = std::stof(temp[2]);
+					tempMaterial.Kd.X = algorithm::li_stof(temp[0]);
+					tempMaterial.Kd.Y = algorithm::li_stof(temp[1]);
+					tempMaterial.Kd.Z = algorithm::li_stof(temp[2]);
 				}
 				// Specular Color
 				if (algorithm::firstToken(curline) == "Ks")
@@ -1094,24 +1116,24 @@ namespace objl
 					if (temp.size() != 3)
 						continue;
 
-					tempMaterial.Ks.X = std::stof(temp[0]);
-					tempMaterial.Ks.Y = std::stof(temp[1]);
-					tempMaterial.Ks.Z = std::stof(temp[2]);
+					tempMaterial.Ks.X = algorithm::li_stof(temp[0]);
+					tempMaterial.Ks.Y = algorithm::li_stof(temp[1]);
+					tempMaterial.Ks.Z = algorithm::li_stof(temp[2]);
 				}
 				// Specular Exponent
 				if (algorithm::firstToken(curline) == "Ns")
 				{
-					tempMaterial.Ns = std::stof(algorithm::tail(curline));
+					tempMaterial.Ns = algorithm::li_stof(algorithm::tail(curline));
 				}
 				// Optical Density
 				if (algorithm::firstToken(curline) == "Ni")
 				{
-					tempMaterial.Ni = std::stof(algorithm::tail(curline));
+					tempMaterial.Ni = algorithm::li_stof(algorithm::tail(curline));
 				}
 				// Dissolve
 				if (algorithm::firstToken(curline) == "d")
 				{
-					tempMaterial.d = std::stof(algorithm::tail(curline));
+					tempMaterial.d = algorithm::li_stof(algorithm::tail(curline));
 				}
 				// Illumination
 				if (algorithm::firstToken(curline) == "illum")
