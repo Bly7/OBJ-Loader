@@ -452,6 +452,8 @@ namespace objl
 			std::vector<unsigned int> Indices;
 
 			std::vector<std::string> MeshMatNames;
+			std::string lastMat;
+			bool matAddedToMesh = false;
 
 			bool listening = false;
 			std::string meshname;
@@ -517,6 +519,11 @@ namespace objl
 							meshname.clear();
 
 							meshname = algorithm::tail(curline);
+
+							if (matAddedToMesh == false)
+							{
+								MeshMatNames.push_back(lastMat);
+							}
 						}
 						else
 						{
@@ -534,6 +541,8 @@ namespace objl
 					std::cout << std::endl;
 					outputIndicator = 0;
 					#endif
+
+					matAddedToMesh = false;
 				}
 				// Generate a Vertex Position
 				if (algorithm::firstToken(curline) == "v")
@@ -606,7 +615,9 @@ namespace objl
 				// Get Mesh Material Name
 				if (algorithm::firstToken(curline) == "usemtl")
 				{
-					MeshMatNames.push_back(algorithm::tail(curline));
+					lastMat = algorithm::tail(curline);
+					matAddedToMesh = true;
+					MeshMatNames.push_back(lastMat);
 
 					// Create new Mesh, if Material changes within a group
 					if (!Indices.empty() && !Vertices.empty())
@@ -681,6 +692,11 @@ namespace objl
 
 				// Insert Mesh
 				LoadedMeshes.push_back(tempMesh);
+
+				if (matAddedToMesh == false)
+				{
+					MeshMatNames.push_back(lastMat);
+				}
 			}
 
 			file.close();
