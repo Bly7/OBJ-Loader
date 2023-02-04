@@ -281,7 +281,7 @@ namespace objl
 				return false;
 		}
 
-		// Generate a cross produect normal for a triangle
+		// Generate a cross product normal for a triangle
 		Vector3 GenTriNormal(Vector3 t1, Vector3 t2, Vector3 t3)
 		{
 			Vector3 u = t2 - t1;
